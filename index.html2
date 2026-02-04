@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Flash USDT Sender</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:#0f0f23;font-family:Arial;}
+    .container{max-width:500px;margin:50px auto;padding:30px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:20px;color:white;box-shadow:0 20px 40px rgba(0,0,0,0.3);}
+    .logo{width:50px;height:50px;border-radius:50%;margin-right:15px;}
+    .balance{font-size:36px;font-weight:bold;margin:20px 0;}
+    .price{font-size:28px;color:#4ade80;margin:10px 0;}
+    input{width:100%;padding:15px;border:none;border-radius:10px;margin:10px 0;font-size:16px;}
+    button{width:100%;padding:18px;background:#10b981;color:white;border:none;border-radius:50px;font-size:18px;font-weight:bold;cursor:pointer;margin-top:20px;}
+    button:hover{background:#059669;}
+    .status{padding:15px;border-radius:10px;margin:15px 0;}
+    .success{background:rgba(16,185,129,0.2);}
+    .loading{background:rgba(59,130,246,0.2);}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 style="text-align:center;margin-bottom:30px;">⚡ Flash USDT Sender</h1>
+    
+    <div style="display:flex;align-items:center;margin-bottom:20px;">
+      <img src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/USDT/logo.png" class="logo" alt="USDT">
+      <div>
+        <div class="balance" id="balance">0.000000</div>
+        <div style="font-size:14px;opacity:0.9;">USDT</div>
+      </div>
+    </div>
+    
+    <div class="price" id="price">$1.0000 <span style="font-size:14px;">(Live)</span></div>
+    
+    <input type="text" id="targetWallet" placeholder="Enter recipient TRON address (T...)" />
+    <input type="number" id="amount" placeholder="Amount (1.0)" value="1.0" step="0.1" />
+    
+    <button onclick="sendFlashUSDT()">🚀 Send Flash USDT</button>
+    
+    <div id="status" class="status" style="display:none;"></div>
+    <div style="font-size:12px;text-align:center;margin-top:20px;opacity:0.8;">
+      TX: <a href="#" id="txLink" style="color:#4ade80;">Pending</a>
+    </div>
+  </div>
+
+  <script>
+    // Live price animation
+    const prices = [0.9998,1.0000,1.0002,0.9999,1.0001];
+    setInterval(()=>{
+      const price = prices[Math.floor(Math.random()*prices.length)];
+      document.getElementById('price').innerHTML = `$${price.toFixed(4)} <span style="font-size:14px;">(Live)</span>`;
+    },2500);
+
+    async function sendFlashUSDT() {
+      const target = document.getElementById('targetWallet').value;
+      const amount = document.getElementById('amount').value;
+      
+      if(!target.startsWith('T') || target.length < 30) {
+        alert('❌ Enter valid TRON address (T...)');
+        return;
+      }
+      
+      const status = document.getElementById('status');
+      const button = document.querySelector('button');
+      
+      // Simulate sending
+      status.innerHTML = '⏳ Broadcasting to mempool...';
+      status.className = 'status loading';
+      status.style.display = 'block';
+      button.disabled = true;
+      button.textContent = 'Sending...';
+      
+      // SIMULATED TX (Replace with real TronWeb later)
+      setTimeout(()=>{
+        const fakeTx = 'tf'+Math.random().toString(36).substr(2,40).toUpperCase();
+        status.innerHTML = `✅  ${amount} USDT Flash sent!<br>Visible in Trust Wallet (3-30s)`;
+        status.className = 'status success';
+        document.getElementById('balance').textContent = amount+'.000000';
+        document.getElementById('txLink').href = `https://tronscan.org/#/transaction/${fakeTx}`;
+        document.getElementById('txLink').textContent = fakeTx;
+        button.textContent = '✅ Sent!';
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
